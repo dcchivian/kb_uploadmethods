@@ -1,5 +1,21 @@
 ###Release Notes
 
+**1.0.43**
+update wrong description for FASTQ/SRA importer
+Add file type checking to output of Import FASTQ/SRA file. This will enforce proper file names.
+
+**1.0.42**
+replace SBML model importer from fba_tools.sbml_file_to_model to SBMLTools.sbml_importer/integrate_model
+
+**1.0.41**
+Updated the contact information for the apps
+
+**1.0.40**
+Fixing algorithm to locate correct directory for fastq-dump result
+
+**1.0.39**
+Fixing metagenome gff fasta importer outputs and variable names
+
 **1.0.34**
 In the Batch Import apps, accept both /user_id and / as valid names of the root directory
 

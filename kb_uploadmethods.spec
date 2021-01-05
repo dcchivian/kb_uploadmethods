@@ -169,8 +169,8 @@ module kb_uploadmethods {
   } UploadMetagenomeFastaGFFMethodParams;
 
   typedef structure {
-    string genome_ref;
-    string genome_info;
+    string metagenome_ref;
+    string metagenome_info;
     report_name report_name;
     report_ref report_ref;
   } UploadMetagenomeFastaGFFMethodResult;
@@ -596,5 +596,14 @@ module kb_uploadmethods {
   } FileToConditionSetParams;
 
   funcdef import_attribute_mapping_from_staging(FileToConditionSetParams params)
+          returns (UploadMethodResult returnVal) authentication required;
+
+  typedef structure {
+    string staging_file_subdir_path;
+    int workspace_id;
+    string escher_map_name;
+  } EscherMapParams;
+
+  funcdef import_eschermap_from_staging(EscherMapParams params)
           returns (UploadMethodResult returnVal) authentication required;
 };

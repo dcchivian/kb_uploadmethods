@@ -18,6 +18,7 @@ from kb_uploadmethods.Utils.ImportPhenotypeSetUtil import ImportPhenotypeSetUtil
 from kb_uploadmethods.Utils.ImportReadsUtil import ImportReadsUtil
 from kb_uploadmethods.Utils.ImportSRAUtil import ImportSRAUtil
 from kb_uploadmethods.Utils.UnpackFileUtil import UnpackFileUtil
+from kb_uploadmethods.Utils.ImportEscherMapUtil import ImportEscherMapUtil
 from kb_uploadmethods.Utils.UploaderUtil import UploaderUtil
 #END_HEADER
 
@@ -37,9 +38,9 @@ class kb_uploadmethods:
     # state. A method could easily clobber the state set by another while
     # the latter method is running.
     ######################################### noqa
-    VERSION = "1.0.29"
-    GIT_URL = "https://github.com/slebras/kb_uploadmethods.git"
-    GIT_COMMIT_HASH = "4c0579bec5aa606f5e42cf29d920872d34ea5b52"
+    VERSION = "1.0.43"
+    GIT_URL = "git@github.com:Tianhao-Gu/kb_uploadmethods.git"
+    GIT_COMMIT_HASH = "609e8df68ce8e5a81fc69382a4dd82f2fe348cee"
 
     #BEGIN_CLASS_HEADER
     #END_CLASS_HEADER
@@ -206,29 +207,27 @@ class kb_uploadmethods:
         """
         :param params: instance of type
            "UploadMetagenomeFastaGFFMethodParams" (Required: genome_name:
-           output genome object name workspace_name: workspace name/ID of the
-           object For staging area: fasta_file: fasta file containing
+           output metagenome object name workspace_name: workspace name/ID of
+           the object For staging area: fasta_file: fasta file containing
            assembled contigs/chromosomes gff_file: gff file containing
            predicted gene models and corresponding features Optional params:
-           scientific_name: proper name for species, key for taxonomy lookup.
-           Default to 'unknown_taxon' source: Source Of The GFF File. Default
-           to 'User' taxon_wsname - where the reference taxons are. Default
-           to 'ReferenceTaxons' taxon_id - if defined, will try to link the
-           Genome to the specified taxonomy id in lieu of performing the
-           lookup during upload release: Release Or Version Of The Source
-           Data genetic_code: Genetic Code For The Organism type:
-           'Reference', 'User upload', 'Representative') -> structure:
-           parameter "fasta_file" of String, parameter "gff_file" of String,
-           parameter "genome_name" of String, parameter "workspace_name" of
-           type "workspace_name" (workspace name of the object), parameter
-           "genome_type" of String, parameter "scientific_name" of String,
-           parameter "source" of String, parameter "taxon_wsname" of String,
-           parameter "taxon_id" of String, parameter "release" of String,
-           parameter "genetic_code" of Long, parameter "type" of String,
-           parameter "generate_missing_genes" of String
+           source: Source Of The GFF File. Default to 'User' taxon_wsname -
+           where the reference taxons are. Default to 'ReferenceTaxons'
+           taxon_id - if defined, will try to link the Genome to the
+           specified taxonomy id in lieu of performing the lookup during
+           upload release: Release Or Version Of The Source Data
+           genetic_code: Genetic Code For The Organism type: 'Reference',
+           'User upload', 'Representative') -> structure: parameter
+           "fasta_file" of String, parameter "gff_file" of String, parameter
+           "genome_name" of String, parameter "workspace_name" of type
+           "workspace_name" (workspace name of the object), parameter
+           "source" of String, parameter "taxon_wsname" of String, parameter
+           "taxon_id" of String, parameter "release" of String, parameter
+           "genetic_code" of Long, parameter "type" of String, parameter
+           "generate_missing_genes" of String
         :returns: instance of type "UploadMetagenomeFastaGFFMethodResult" ->
-           structure: parameter "genome_ref" of String, parameter
-           "genome_info" of String, parameter "report_name" of type
+           structure: parameter "metagenome_ref" of String, parameter
+           "metagenome_info" of String, parameter "report_name" of type
            "report_name", parameter "report_ref" of type "report_ref"
         """
         # ctx is the context object
@@ -251,7 +250,7 @@ class kb_uploadmethods:
 
         uploader = ImportMetagenomeGFFFastaUtil(self.config)
         returnVal = uploader.import_metagenome_gff_fasta_from_staging(params)
-        reportVal = uploader.generate_report(returnVal['genome_ref'],
+        reportVal = uploader.generate_report(returnVal['metagenome_ref'],
                                                    params)
         returnVal.update(reportVal)
         #END upload_metagenome_fasta_gff_file
@@ -798,14 +797,15 @@ class kb_uploadmethods:
         # return variables are: returnVal
         #BEGIN import_file_as_fba_model_from_staging
         print(('--->\nrunning {}.{}\n params:\n{}'
-            .format(self.__class__.__name__, sys._getframe().f_code.co_name,
-                    json.dumps(params, indent=1))))
+              .format(self.__class__.__name__, sys._getframe().f_code.co_name,
+                      json.dumps(params, indent=1))))
 
         importer = ImportFBAModelUtil(self.config)
         returnVal = importer.import_fbamodel_from_staging(params)
 
-        reportVal = importer.generate_report(returnVal['obj_ref'], params)
-        returnVal.update(reportVal)
+        if not returnVal.get('report_name'):
+            reportVal = importer.generate_report(returnVal['obj_ref'], params)
+            returnVal.update(reportVal)
         #END import_file_as_fba_model_from_staging
 
         # At some point might do deeper type checking...
@@ -1001,6 +1001,32 @@ class kb_uploadmethods:
         # At some point might do deeper type checking...
         if not isinstance(returnVal, dict):
             raise ValueError('Method import_attribute_mapping_from_staging return value ' +
+                             'returnVal is not type dict as required.')
+        # return the results
+        return [returnVal]
+
+    def import_eschermap_from_staging(self, ctx, params):
+        """
+        :param params: instance of type "EscherMapParams" -> structure:
+           parameter "staging_file_subdir_path" of String, parameter
+           "workspace_id" of Long, parameter "escher_map_name" of String
+        :returns: instance of type "UploadMethodResult" -> structure:
+           parameter "obj_ref" of type "obj_ref", parameter "report_name" of
+           type "report_name", parameter "report_ref" of type "report_ref"
+        """
+        # ctx is the context object
+        # return variables are: returnVal
+        #BEGIN import_eschermap_from_staging
+        importer = ImportEscherMapUtil(self.config)
+        returnVal = importer.import_eschermap_from_staging(params)
+
+        reportVal = importer.generate_report(returnVal['obj_ref'], params)
+        returnVal.update(reportVal)
+        #END import_eschermap_from_staging
+
+        # At some point might do deeper type checking...
+        if not isinstance(returnVal, dict):
+            raise ValueError('Method import_eschermap_from_staging return value ' +
                              'returnVal is not type dict as required.')
         # return the results
         return [returnVal]

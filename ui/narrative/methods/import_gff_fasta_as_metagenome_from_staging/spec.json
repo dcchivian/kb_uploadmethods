@@ -1,15 +1,15 @@
 {
   "ver" : "1.0.0",
   "authors" : ["slebras"],
-  "contact" : "help@kbase.us",
+  "contact" : "http://kbase.us/contact-us/",
   "visble" : true,
   "categories" : [ "inactive","assembly","upload" ],
   "widgets" : {
     "input" : null,
-    "output" : "kbaseAnnotatedMetagenomeAssemblyView"
+    "output" : "no-display"
   },
-  "parameters" : 
-  [ 
+  "parameters" :
+  [
     {
       "id" : "fasta_file",
       "optional" : false,
@@ -20,7 +20,7 @@
       "dynamic_dropdown_options" : {
         "data_source": "ftp_staging"
       }
-    },    
+    },
     {
       "id" : "gff_file",
       "optional" : false,
@@ -39,7 +39,7 @@
       "allow_multiple" : false,
       "default_values" : [ "" ],
       "field_type" : "text",
-      "text_options" : 
+      "text_options" :
       {
         "valid_ws_types" : [ "KBaseMetagenomes.AnnotatedMetagenomeAssembly" ],
         "is_output_name" : true
@@ -55,12 +55,20 @@
       "dropdown_options":{
       "options": [
         {
-          "value": "RefSeq user",
-          "display": "RefSeq"
+          "value": "EBI user",
+          "display": "EBI"
         },
         {
-          "value": "Ensembl user",
-          "display": "Ensembl"
+          "value": "IMG user",
+          "display": "IMG"
+        },
+        {
+          "value": "JGI user",
+          "display": "JGI"
+        },
+        {
+          "value": "BGI user",
+          "display": "BGI (Beijing Genomics)"
         },
         {
           "value": "Other",
@@ -69,32 +77,14 @@
       ]}
     },
     {
-      "id" : "taxon_wsname",
-      "optional" : true,
-      "advanced" : true,
-      "allow_multiple" : false,
-      "default_values" : [ "" ],
-      "field_type" : "text",
-      "text_options" : {}
-    },
-    {
-      "id" : "taxon_id",
-      "optional" : true,
-      "advanced" : true,
-      "allow_multiple" : false,
-      "default_values" : [ "" ],
-      "field_type" : "text",
-      "text_options" : {}
-    },
-    {  
       "id": "release",
       "optional": true,
       "advanced": true,
       "allow_multiple": false,
       "default_values": [ "" ],
-      "field_type" : "text" 
+      "field_type" : "text"
     },
-    {  
+    {
       "id": "genetic_code",
       "optional": true,
       "advanced": true,
@@ -118,14 +108,14 @@
       }
     }
   ],
-  "behavior" : 
+  "behavior" :
   {
-    "service-mapping" : 
+    "service-mapping" :
     {
       "url" : "",
       "name" : "kb_uploadmethods",
       "method" : "upload_metagenome_fasta_gff_file",
-      "input_mapping" : 
+      "input_mapping" :
       [
         {
           "narrative_system_variable": "workspace",
@@ -148,14 +138,6 @@
           "target_property": "source"
         },
         {
-          "input_parameter": "taxon_wsname",
-          "target_property": "taxon_wsname"
-        },
-        {
-          "input_parameter": "taxon_id",
-          "target_property": "taxon_id"
-        },
-        {
           "input_parameter": "release",
           "target_property": "release"
         },
@@ -168,20 +150,8 @@
           "target_property": "generate_missing_genes"
         }
       ],
-      "output_mapping" : 
+      "output_mapping" :
       [
-        {
-          "narrative_system_variable": "workspace",
-          "target_property": "ws"
-        },
-        {
-          "constant_value": "KBaseMetagenomes.AnnotatedMetagenomeAssembly",
-          "target_property": "type"
-        },
-        {
-          "input_parameter": "genome_name",
-          "target_property": "id"
-        },
         {
             "service_method_output_path": [0, "report_name"],
             "target_property": "report_name"
@@ -189,14 +159,6 @@
         {
             "service_method_output_path": [0, "report_ref"],
             "target_property": "report_ref"
-        },
-        {
-          "service_method_output_path": [0,"obj_ref"],
-          "target_property": "obj_ref"
-        },
-        {
-            "constant_value": "16",
-            "target_property": "report_window_line_height"
         }
       ]
     }

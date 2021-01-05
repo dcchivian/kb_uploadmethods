@@ -3,12 +3,12 @@
   "authors" : ["tgu2"],
   "contact" : "http://kbase.us/contact-us/",
   "visible" : true,
-  "categories" : [ "inactive","metabolic_modeling","upload" ],
+  "categories" : ["active", "metabolic_modeling", "upload"],
   "widgets": {
     "input": "kbaseNarrativeMethodInput",
     "output" : "no-display"
   },
-  "parameters" : [ 
+  "parameters" : [
     {
       "id" : "staging_file_subdir_path",
       "optional" : false,
@@ -19,16 +19,16 @@
       "dynamic_dropdown_options" : {
         "data_source": "ftp_staging"
       }
-    }, 
+    },
     {
-      "id" : "media_name",
+      "id" : "escher_map_name",
       "optional" : false,
       "advanced" : false,
       "allow_multiple" : false,
       "default_values" : [ "" ],
       "field_type" : "text",
       "text_options" : {
-        "valid_ws_types" : [ "KBaseBiochem.Media" ],
+        "valid_ws_types" : ["KBaseFBA.EscherMap"],
         "is_output_name" : true
       }
     }
@@ -37,15 +37,15 @@
     "service-mapping" : {
       "url" : "",
       "name" : "kb_uploadmethods",
-      "method" : "import_tsv_or_excel_as_media_from_staging",
+      "method" : "import_eschermap_from_staging",
       "input_mapping" : [
         {
-          "narrative_system_variable": "workspace",
-          "target_property": "workspace_name"
+          "narrative_system_variable": "workspace_id",
+          "target_property": "workspace_id"
         },
         {
-          "input_parameter": "media_name",
-          "target_property": "media_name"
+          "input_parameter": "escher_map_name",
+          "target_property": "escher_map_name"
         },
         {
           "input_parameter": "staging_file_subdir_path",
@@ -53,10 +53,6 @@
         }
       ],
       "output_mapping" : [
-        {
-          "narrative_system_variable": "workspace",
-          "target_property": "wsName"
-        },
         {
           "service_method_output_path": [0,"obj_ref"],
           "target_property": "obj_ref",
@@ -69,10 +65,6 @@
         {
             "service_method_output_path": [0, "report_ref"],
             "target_property": "report_ref"
-        },
-        {
-            "constant_value": "16",
-            "target_property": "report_window_line_height"
         }
       ]
     }
